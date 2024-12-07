@@ -1,9 +1,10 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
+import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar"
 import { cn } from "@/lib/utils"
-import { BotIcon, CreditCardIcon, LayoutDashboardIcon, PresentationIcon } from "lucide-react"
+import { BotIcon, CreditCardIcon, LayoutDashboardIcon, Plus, PresentationIcon } from "lucide-react"
+import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
@@ -41,10 +42,19 @@ const projects=[
 
 export function AppSidebar(){
     const pathName=usePathname();
+    const {open}=useSidebar();
     return (
         <Sidebar collapsible="icon" variant="floating">
             <SidebarHeader>
-                Logo
+                <div className="flex items-center gap-2">
+                    <Image src="/logo.svg" alt='logo' width={40} height={40}/>
+                    {open && (
+                        <h1 className="text-xl font-bold text-primary/80">
+                            RepoAssist
+                        </h1>
+                    )}
+                    
+                </div>
             </SidebarHeader>
 
             <SidebarContent>
@@ -101,7 +111,11 @@ export function AppSidebar(){
                             <SidebarMenuItem>
                                 <Link href='/create'>
                                     <Button variant={'outline'} className="w-fit" size="sm">
-                                        Create Project
+                                        <Plus/>
+                                        {open && (
+                                            <p>Create Project</p>
+                                        )}
+                                        
                                     </Button>
                                 </Link>
                             
