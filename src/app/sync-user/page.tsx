@@ -21,6 +21,12 @@ const SyncUser=async ()=>{
         where:{
             emailAddress:user.emailAddresses[0]?.emailAddress ?? ""
         },
+        update:{
+            firstName:user.firstName,
+            lastName:user.lastName,
+            imageUrl:user.imageUrl
+
+        },
         create:{
             id:userId,
             emailAddress:user.emailAddresses[0]?.emailAddress ?? "",
@@ -28,14 +34,9 @@ const SyncUser=async ()=>{
             lastName:user.lastName,
             imageUrl:user.imageUrl
         },
-        update:{
-            firstName:user.firstName,
-            lastName:user.lastName,
-            imageUrl:user.imageUrl
-
-        }
+        
     })
-    return redirect("/dashboard");
+    return redirect('/dashboard');
 }
 
 export default SyncUser;
