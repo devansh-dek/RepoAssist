@@ -1,7 +1,7 @@
 import { z } from "zod"
 import { createTRPCRouter,protectedProcedure,publicProcedure } from "../trpc"
-import { createGzip } from "zlib";
 import { pollCommits } from "@/lib/github";
+import { indexGithubRepo } from "@/lib/github-loader";
 
 export const projectRouter=createTRPCRouter({
     createProject:protectedProcedure.input(
@@ -25,6 +25,8 @@ export const projectRouter=createTRPCRouter({
                 }
             }
         })
+        //jab project create hoga tabhi embeddings bhi nikal lo
+        await indexGithubRepo(project.id,input.githubUrl,input.githubToken);
         await pollCommits(project.id);
         return project;
     }),

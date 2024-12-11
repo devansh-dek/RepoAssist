@@ -7,7 +7,7 @@ export const octokit=new Octokit({
     auth:process.env.GITHUB_TOKEN
 });
 
-const githubUrl="https://github.com/PrathamDwivedi27/SmartDocs.ai"
+// const githubUrl="https://github.com/PrathamDwivedi27/SmartDocs.ai"
 
 type Response={
     commitHash:string;
