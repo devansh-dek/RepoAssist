@@ -28,10 +28,10 @@ export const indexGithubRepo=async(projectId:string,githubUrl:string, githubToke
         console.log("all embeddings are null");
         return;
     }
-    console.log("this is ",allEmbeddings)
+    // console.log("this is ",allEmbeddings)
 
     await Promise.allSettled(allEmbeddings.map(async (embedding,index)=>{
-        console.log(`processing ${index} of ${allEmbeddings.length}`);
+        // console.log(`processing ${index} of ${allEmbeddings.length}`);
         if(!embedding) return ;
 
         const sourceCodeEmbedding=await db.sourceCodeEmbedding.create({
@@ -54,14 +54,14 @@ export const indexGithubRepo=async(projectId:string,githubUrl:string, githubToke
 
 const  generateEmbeddings=async(docs:Document[])=>{
     return await Promise.all(docs.map(async doc=>{
-        console.log(`Processing file: ${doc.metadata.source}`);
+        // console.log(`Processing file: ${doc.metadata.source}`);
         const summary=await summariseCode(doc);
         if (!summary) {
             console.warn(`No summary generated for ${doc.metadata.source}`);
             return null;
         }
         const embedding= await generateEmbedding(summary!);
-        console.log("embedding generated for",doc.metadata.source);
+        // console.log("embedding generated for",doc.metadata.source);
         if (!summary || !embedding) {
             console.warn(`Skipping embedding for file: ${doc.metadata.source}`);
             return null;

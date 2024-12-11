@@ -45,7 +45,7 @@ export const aiSummariseCommit=async (diff:string)=>{
 }
 
 export async function summariseCode(doc:Document){
-    console.log("getting summary for",doc.metadata.source);
+    // console.log("getting summary for",doc.metadata.source);
     try {
         const code=doc.pageContent.slice(0,10000);      //limit to 10000 characters
         const reponse=await model.generateContent([
