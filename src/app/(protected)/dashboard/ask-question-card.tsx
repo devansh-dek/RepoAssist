@@ -10,6 +10,9 @@ import Image from 'next/image';
 import { askQuestion } from './actions';
 import { readStreamableValue } from 'ai/rsc';
 import CodeReferences from './code-references';
+import { api } from '@/trpc/react';
+import { toast } from 'sonner';
+import useRefetch from '@/hooks/use-refetch';
 
 const AskQuestionCard = () => {
     const {project}=useProject();
@@ -18,6 +21,7 @@ const AskQuestionCard = () => {
     const [question,setQuestion]=useState('');
     const [filesReferences,setFilesReferences]=useState<{fileName:string,sourceCode:string,summary:string}[]>([]);
     const [answer ,setAnswer]=useState('');
+    const saveAnswer=api.project.saveAnswer.useMutation();
 
     const onSubmit=async(e:React.FormEvent<HTMLFormElement>)=>{
         setAnswer('');
@@ -38,16 +42,37 @@ const AskQuestionCard = () => {
         }
         setLoading(false);
     }
-
+    const refetch=useRefetch();
   return (
     <>
      <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className='sm:max-w-[80vw] max-h-[80vh] overflow-auto'>
             <DialogHeader>
-                <DialogTitle className='flex'>
+                <div className='flex items-center gap-2'>
+                <DialogTitle>
                     <Image src='/logo.svg' alt='RepoAssist' width={60} height={50}/>
-                    <p className='mt-4 text-2xl text-blue-500'>RepoAssist</p>
                 </DialogTitle>
+                <Button variant={'outline'} onClick={()=>{
+                    saveAnswer.mutate({
+                        projectId:project?.id!,
+                        question,
+                        answer,
+                        fileReferences:filesReferences
+                    },{
+                        onSuccess:()=>{
+                            toast.success('Answer saved');
+                            refetch();
+                        },
+                        onError:(err)=>{
+                            toast.error('Error saving answer');
+                        }
+                    });
+                    
+                }}>
+                    Save Answer
+                </Button>
+                </div>
+                
             </DialogHeader>
             <MDEditor.Markdown source={answer} className='custom-markdown max-w-[90vw] h-full max-h-[60vh] overflow-scroll'/>
             <div className='h-4'></div>
