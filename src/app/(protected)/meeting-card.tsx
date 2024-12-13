@@ -7,26 +7,42 @@ import React from 'react'
 import { useDropzone } from 'react-dropzone'
 import {CircularProgressbar,buildStyles} from 'react-circular-progressbar'
 import { toast } from 'sonner'
+import { api } from '@/trpc/react'
+import useProject from '@/hooks/use-project'
+import { useRouter } from 'next/navigation'
 
 const MeetingCard = () => {
+    const {project}=useProject();
     const [isUploading, setIsUploading] = React.useState(false);
     const [progress, setProgress] = React.useState(0);
+    const router=useRouter();
+    const uploadingMeeting=api.project.uploadMeeting.useMutation();
 
     const { getRootProps, getInputProps } = useDropzone({
         accept: { 'audio/*': ['.mp3', '.wav', '.m4a'] },
         multiple: false,
         maxSize: 50_000_000,
         onDrop: async (acceptedFiles) => {
+            if(!project) return ;
             setIsUploading(true);
             try {
                 const file = acceptedFiles[0];
-                if (file) {
-                    console.log("Uploading file:", file.name);
-                    const downloadURL=await uploadFile(file as File, setProgress);
-                    console.log("File uploaded to Cloudinary:", downloadURL);
-                }
+                if (!file) return ;
+                    // console.log("Uploading file:", file.name);
+                    const downloadURL=await uploadFile(file as File, setProgress) as string;
+                    // console.log("File uploaded to Cloudinary:", downloadURL);
+                    uploadingMeeting.mutate({
+                        projectId:project.id,
+                        meetingUrl:downloadURL,
+                        name:file.name
+                    },{
+                        onSuccess:()=>{
+                            toast.success("File uploaded successfully");
+                            router.push('/meetings');
+                        }
+                    })
+                
 
-                toast.success("File uploaded successfully");
             } catch (error) {
                 console.error("Upload error:", error);
             } finally {
