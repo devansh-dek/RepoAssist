@@ -121,4 +121,7 @@ export const projectRouter=createTRPCRouter({
             include:{user:true}
         })
     }),
+    getMyCredits:protectedProcedure.query(async({ctx})=>{
+        return ctx.db.user.findUnique({where:{id:ctx.user.userId!},select:{credits:true}})
+    }),
 })
