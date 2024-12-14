@@ -6,6 +6,8 @@ import MeetingCard from '../meeting-card';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { toast } from 'sonner';
+import useRefetch from '@/hooks/use-refetch';
 
 
 const MeetingsPage = () => {
@@ -13,6 +15,8 @@ const MeetingsPage = () => {
     const {data:meetings,isLoading}=api.project.getMeetings.useQuery({projectId},{        //to check whether meeting has finished processing or not 
         refetchInterval:4000
     })
+    const deleteMeeting=api.project.deleteMeeting.useMutation();
+    const refetch=useRefetch();
   return (
     <>
      <MeetingCard/>
@@ -50,7 +54,18 @@ const MeetingsPage = () => {
                             <Button variant='outline'>
                                 View Meeting
                             </Button>
-                      </Link>      
+                      </Link>  
+                      <Button disabled={deleteMeeting.isPending} size='sm' variant='destructive' onClick={() => deleteMeeting.mutate(
+                        { meetingId: meeting.id },
+                        {
+                          onSuccess: () => {
+                            toast.success('Meeting deleted successfully');
+                            refetch()
+                          }
+                        }
+                      )}>
+                          Delete
+                        </Button>    
                 </div>
             </li>
         ))}
