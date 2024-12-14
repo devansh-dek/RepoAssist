@@ -2,6 +2,7 @@ import { z } from "zod"
 import { createTRPCRouter,protectedProcedure,publicProcedure } from "../trpc"
 import { pollCommits } from "@/lib/github";
 import { indexGithubRepo } from "@/lib/github-loader";
+import { arch } from "os";
 
 export const projectRouter=createTRPCRouter({
     createProject:protectedProcedure.input(
@@ -107,5 +108,11 @@ export const projectRouter=createTRPCRouter({
             where:{id:input.meetingId},
             include:{issues:true}
         })
-    })
+    }),
+    archiveProject:protectedProcedure.input(z.object({projectId:z.string()})).mutation(async({ctx,input})=>{
+        return await ctx.db.project.update({
+            where:{id:input.projectId},
+            data:{deletedAt:new Date()}
+        })
+    }),
 })
