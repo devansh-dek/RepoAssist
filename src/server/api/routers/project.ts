@@ -1,9 +1,8 @@
 import { z } from "zod"
 import { createTRPCRouter,protectedProcedure,publicProcedure } from "../trpc"
 import { pollCommits } from "@/lib/github";
-import { checkCredits, indexGithubRepo } from "@/lib/github-loader";
-import { arch } from "os";
-import { check } from "prettier";
+import { checkCredits,indexGithubRepo } from "@/lib/github-loader";
+
 
 export const projectRouter=createTRPCRouter({
     createProject:protectedProcedure.input(
@@ -114,9 +113,17 @@ export const projectRouter=createTRPCRouter({
             }
         })
     }),
-    deleteMeeting:protectedProcedure.input(z.object({meetingId:z.string()})).mutation(async({ctx,input})=>{
-        return await ctx.db.meeting.delete({where:{id:input.meetingId}})
-    }),
+    deleteMeeting: protectedProcedure
+  .input(z.object({ meetingId: z.string() }))
+  .mutation(async ({ ctx, input }) => {
+    try {
+      return await ctx.db.meeting.delete({ where: { id: input.meetingId } });
+    } catch (error) {
+      console.error("Failed to delete meeting:", error);
+      throw new Error("Meeting not found or already deleted");
+    }
+  }),
+
     getMeetingById:protectedProcedure.input(z.object({meetingId:z.string()})).query(async({ctx,input})=>{
         return await ctx.db.meeting.findUnique({
             where:{id:input.meetingId},

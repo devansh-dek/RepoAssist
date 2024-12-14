@@ -35,7 +35,9 @@ export async function POST(request:NextRequest){
             })
         }
         await db.stripeTransaction.create({data:{userId,credits}})
-        await db.user.update({where :{id:userId},data:{credits:{increment:credits}}})
+        const response=await db.user.update({where :{id:userId},data:{credits:{increment:credits}}});
+        console.log("my resp",response);
+
 
         return NextResponse.json({message:"Credits added successfully"},{status:200})
     }

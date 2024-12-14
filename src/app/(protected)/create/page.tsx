@@ -86,7 +86,7 @@ const CreatePage = () => {
                 />
                 <div className='h-4'></div>
                 {!!checkCredits.data && (
-                  <>
+                   <>
                     <div className='mt-2 bg-orange-50 px-4 py-2 rounded-md border border-orange-200 text-orange-700'>
                       <div className='flex items-center gap-2'>
                         <Info className='size-4'/>
@@ -95,10 +95,11 @@ const CreatePage = () => {
                       <p className='text-sm text-blue-600 ml-6 '>You have <strong>{checkCredits.data?.userCredits}</strong>credits remaining</p>
                     </div>
                   </>
-                ) }
-                <Button type='submit' disabled={createProject.isPending || checkCredits.isPending || !hasEnoughCredits} className='mt-2'>
+                  )}
+                
+                <Button type='submit' disabled={createProject.isPending ||  checkCredits.isPending || !hasEnoughCredits} className='mt-2'>
                   {!!checkCredits.data ? 'Link Repository' : 'Check Credits'}
-                  {/* Link Repository */}
+                   {/* Link Repository */}
                 </Button>
             </form>
         </div>

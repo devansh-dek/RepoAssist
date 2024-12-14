@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     /* Base Options: */
+    "noImplicitAny": false,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "target": "es2022",
