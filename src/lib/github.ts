@@ -7,6 +7,10 @@ export const octokit=new Octokit({
     auth:process.env.GITHUB_TOKEN
 });
 
+const { data } = await octokit.rest.rateLimit.get();
+console.log(data.resources.core);
+
+
 // const githubUrl="https://github.com/PrathamDwivedi27/SmartDocs.ai"
 
 type Response={

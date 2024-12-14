@@ -2,6 +2,61 @@ import { GithubRepoLoader } from "@langchain/community/document_loaders/web/gith
 import { Document } from "@langchain/core/documents";
 import { generateEmbedding, summariseCode } from "./gemini";
 import { db } from "@/server/db";
+import { Octokit } from "octokit";
+
+//recursive function to get all files in a directory
+const getFileCount=async(path:string, githubOwner:string,githubRepo:string,octokit:Octokit,accumulator:number=0)=>{
+    const {data}=await octokit.rest.repos.getContent({
+        owner:githubOwner,
+        repo:githubRepo,
+        path
+    })
+    if(!Array.isArray(data) && data.type==="file"){
+        return accumulator+1;
+    }
+    if(Array.isArray(data)){        //means it is folder
+        let fileCount=0;
+        const directories:string[]=[];
+
+        for(const item of data){
+            if(item.type==="file"){
+                fileCount++;
+            }else if(item.type==="dir"){
+                directories.push(item.path);
+            }
+        }
+        if(directories.length>0){
+             const directoryCounts=await Promise.all(
+                directories.map(dirPath=>getFileCount(dirPath,githubOwner,githubRepo,octokit,0))
+             )
+             fileCount +=directoryCounts.reduce((accumulator, count) => (accumulator ?? 0) + (count ?? 0), 0) ?? 0;
+        }
+        return accumulator+fileCount;
+    }
+};
+
+export const checkCredits=async (githubUrl:string,githubToken?:string)=>{
+    const octokit=new Octokit({
+        auth:githubToken
+    })
+    const githubOwner=githubUrl.split("/")[3];
+    const githubRepo=githubUrl.split("/")[4];
+
+    if (!githubOwner || !githubRepo){
+        return 0;
+    }
+
+    const path = "";
+    const { data, headers } = await octokit.rest.repos.getContent({
+        owner: githubOwner,
+        repo: githubRepo,
+        path,
+    });
+    console.log("Rate Limit Remaining:", headers['x-ratelimit-remaining']);
+    console.log("Rate Limit Reset Time:", headers['x-ratelimit-reset']);
+    const fileCount=await getFileCount("",githubOwner,githubRepo,octokit,0);
+    return fileCount;
+}
 
 export const loadingGithubRepo=async (githubUrl:string, githubToken?:string)=>{
     const loader = new GithubRepoLoader(
