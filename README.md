@@ -47,7 +47,7 @@ The more similar the query vector is to different lines, the more similar they a
   b. Then, we create a meeting based on its defined schema.  
   c. After processing, the status is updated, and any issues generated for summaries are recorded.
 
-![LoadingToLangchain](/images/Screenshot%202024-12-15%20014606.png)
+![LoadingToLangchain](/images/Screenshot%202024-12-15%20094746.png)
 
 ## 1. **🔗 GitHub Repository Integration**
 Easily link your GitHub repository to RepoAssist. Once connected, you can ask AI-driven questions about your codebase. Whether it's understanding complex functions or tracking changes, Langchain and RAG provide accurate, contextual answers about your code.
