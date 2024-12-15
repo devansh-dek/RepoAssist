@@ -34,7 +34,7 @@ Use `getEmbeddings(document.summary)` to generate vector embeddings like:
 
 ### 4. **Querying Data and Asking Questions**
 Use `getEmbeddings(document.summary)` --> `queryVector`.  
-The more similar the query vector is to different lines, the more similar they are. For example, `queryVector` and `service.ts` match the query, while `index.ts` doesn't match at all, showing they are at opposite directions.
+The more similar the query vector is to different lines, the more similar they are. For example, `service.ts` is quite similar to `query vector` meanwhile `index.ts` doesn't matches at all, showing they are at opposite directions.
 
 ![LoadingToLangchain](/images/Screenshot%202024-12-15%20014532.png)
 
