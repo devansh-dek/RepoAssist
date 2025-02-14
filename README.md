@@ -2,14 +2,6 @@
 
 RepoAssist is an AI-driven platform that connects with your Git repositories, leveraging the capabilities of Gemini 1.5, Langchain, and RAG to provide real-time insights and interactions with your codebase. Whether you're working solo or collaborating with a team, RepoAssist makes managing, querying, and understanding your codebase easier and more efficient.
 
-## Demo Video
-
-Watch the demo video below:
-
-[![RepoAssist Demo](https://img.youtube.com/vi/muqiaW39XhE/1.jpg)](https://www.youtube.com/watch?v=muqiaW39XhE&ab_channel=PrathamDwivedi)
-
-
-
 ## How It Works
 
 RepoAssist seamlessly integrates with your GitHub repository to allow you to interact with your codebase using advanced AI models. By linking your repository, you can query your codebase, see your last 15 commits with summarized insights, and use speech-to-text AI to transcribe meetings and generate summaries.
